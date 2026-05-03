@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAntonizick.com</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --dark:        #020218;
+            --mid:         #050535;
+            --primary:     #070797;
+            --accent:      #3ca0e7;
+            --accent-glow: rgba(60, 160, 231, 0.35);
+            --text:        #e8f0fe;
+            --text-dim:    #8fa8cc;
+            --card-border: rgba(60, 160, 231, 0.18);
+            --glass:       rgba(5, 5, 55, 0.55);
+            --nav-bg:      rgba(2, 2, 22, 0.96);
+            --nav-h:       52px;
+        }
+
+        html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* background: linear-gradient(150deg, #020218 0%, #050535 45%, #090970 100%); */
+            background: linear-gradient(150deg, #050506 0%, #07070f 50%, #0b0b1e 100%);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+            /* remove tap flash on iOS */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* subtle grid overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(60,160,231,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(60,160,231,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        a { text-decoration: none; }
+
+        /* ================================================================
+           NAVIGATION — shared wrapper
+        ================================================================ */
+        .nav-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 2px 24px rgba(0, 0, 180, 0.2);
+        }
+
+        /* ----------------------------------------------------------------
+           DESKTOP NAV  (≥ 800px)
+        ---------------------------------------------------------------- */
+        .nav-desktop {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        nav.primary-navigation > ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav.primary-navigation > ul > li {
+            position: relative;
+        }
+
+        nav.primary-navigation > ul > li > a {
+            display: block;
+            padding: 0.9rem 1.4rem;
+            color: var(--text-dim);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            border-right: 1px solid var(--card-border);
+            transition: color 0.2s, background 0.2s;
+            white-space: nowrap;
+        }
+
+        nav.primary-navigation > ul > li > a:hover,
+        nav.primary-navigation > ul > li:hover > a {
+            color: var(--accent);
+            background: rgba(60, 160, 231, 0.07);
+        }
+
+        /* Desktop dropdown */
+        nav.primary-navigation ul li ul.dropdown {
+            position: absolute;
+            top: calc(100% + 1px);
+            left: 0;
+            min-width: 230px;
+            background: rgba(2, 2, 28, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-top: 2px solid var(--accent);
+            list-style: none;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            box-shadow: 0 12px 40px rgba(0, 0, 180, 0.35);
+            z-index: 999;
+        }
+
+        nav.primary-navigation ul > li:hover > ul.dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        nav.primary-navigation ul li ul.dropdown li a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1.1rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-left: 2px solid transparent;
+            transition: all 0.18s;
+        }
+
+        nav.primary-navigation ul li ul.dropdown li a:hover {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            padding-left: 1.4rem;
+            background: rgba(60, 160, 231, 0.07);
+        }
+
+        /* ----------------------------------------------------------------
+           MOBILE NAV  (< 800px)
+        ---------------------------------------------------------------- */
+        .nav-mobile-header {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            min-height: var(--nav-h);
+        }
+
+        .nav-mobile-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            text-decoration: none;
+        }
+
+        .nav-mobile-brand img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent);
+            box-shadow: 0 0 10px rgba(60,160,231,0.3);
+            object-fit: cover;
+        }
+
+        .nav-mobile-brand span {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--text);
+        }
+
+        /* Hamburger button */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 44px;
+            height: 44px;
+            background: none;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0 10px;
+            transition: background 0.2s, border-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .hamburger:hover,
+        .hamburger:focus {
+            background: rgba(60, 160, 231, 0.1);
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .hamburger .bar {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.2s ease;
+        }
+
+        .hamburger[aria-expanded="true"] .bar:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger[aria-expanded="true"] .bar:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger[aria-expanded="true"] .bar:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Mobile menu panel */
+        .nav-mobile-panel {
+            display: none;
+            overflow: hidden;
+            border-top: 1px solid var(--card-border);
+            max-height: 0;
+            transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-mobile-panel.is-open {
+            max-height: 85vh;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        /* Mobile nav section accordion */
+        .mnav-section {}
+
+        .mnav-section-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 1.25rem;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(60,160,231,0.07);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: left;
+            min-height: 48px;
+            transition: background 0.18s, color 0.18s;
+        }
+
+        .mnav-section-btn:hover,
+        .mnav-section-btn:focus {
+            background: rgba(60, 160, 231, 0.07);
+            color: var(--accent);
+            outline: none;
+        }
+
+        .mnav-section-btn:active {
+            background: rgba(60, 160, 231, 0.12);
+        }
+
+        .mnav-chevron {
+            font-style: normal;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            transition: transform 0.28s ease;
+            flex-shrink: 0;
+        }
+
+        .mnav-section-btn[aria-expanded="true"] .mnav-chevron {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .mnav-links {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+            background: rgba(0, 0, 20, 0.35);
+        }
+
+        .mnav-links.is-open {
+            max-height: 600px;
+        }
+
+        .mnav-links a {
+            display: block;
+            padding: 0.75rem 2rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            transition: color 0.15s, border-color 0.15s, background 0.15s, padding 0.15s;
+        }
+
+        .mnav-links a:hover {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            padding-left: 2.3rem;
+            background: rgba(60, 160, 231, 0.05);
+        }
+
+        .mnav-links a:active {
+            background: rgba(60, 160, 231, 0.12);
+        }
+
+        /* ================================================================
+           HERO
+        ================================================================ */
+        .hero {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero-logo {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            box-shadow:
+                0 0 0 4px rgba(60, 160, 231, 0.12),
+                0 0 32px var(--accent-glow),
+                0 0 64px rgba(7, 7, 151, 0.4);
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-left: 1.5rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        .hero-text h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: linear-gradient(100deg, #ffffff 20%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .hero-text .subtitle {
+            margin-top: 0.35rem;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+        }
+
+        /* ================================================================
+           CONTENT WRAPPER
+        ================================================================ */
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        /* ----------------------------------------------------------------
+           SEARCH BAR
+        ---------------------------------------------------------------- */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .search-bar form {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-bar .brave-logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            flex-shrink: 0;
+            transition: opacity 0.2s;
+        }
+
+        .search-bar .brave-logo:hover { opacity: 0.8; }
+
+        .search-bar input[type="search"] {
+            flex: 1;
+            min-width: 0;
+            padding: 0.55rem 0.9rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem; /* 16px min — prevents iOS zoom */
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-bar input[type="search"]::placeholder { color: var(--text-dim); }
+
+        .search-bar input[type="search"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(60, 160, 231, 0.18);
+        }
+
+        .search-bar input[type="submit"] {
+            padding: 0.55rem 1.1rem;
+            background: var(--primary);
+            border: 1px solid rgba(60, 160, 231, 0.4);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+            min-height: 38px;
+            touch-action: manipulation;
+        }
+
+        .search-bar input[type="submit"]:hover {
+            background: var(--accent);
+            color: #020218;
+            box-shadow: 0 4px 16px rgba(60, 160, 231, 0.3);
+        }
+
+        .search-bar input[type="submit"]:active {
+            background: var(--accent);
+            color: #020218;
+            transform: scale(0.97);
+        }
+
+        /* Quick icons */
+        .quick-icons {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .quick-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            touch-action: manipulation;
+        }
+
+        .quick-icons a img {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            opacity: 0.75;
+            transition: opacity 0.2s, transform 0.2s, border-color 0.2s;
+        }
+
+        .quick-icons a:hover img,
+        .quick-icons a:focus img {
+            opacity: 1;
+            transform: scale(1.12);
+            border-color: var(--accent);
+        }
+
+        .quick-icons a:active img {
+            opacity: 1;
+            transform: scale(0.95);
+        }
+
+        /* ----------------------------------------------------------------
+           PORTAL PANEL
+        ---------------------------------------------------------------- */
+        .portal-panel {
+            background: var(--glass);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1rem 1rem 0.5rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow:
+                0 8px 40px rgba(0, 0, 120, 0.25),
+                inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        .link-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.55rem;
+            padding: 0.55rem 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                var(--card-border) 15%,
+                rgba(60, 160, 231, 0.4) 50%,
+                var(--card-border) 85%,
+                transparent 100%
+            );
+        }
+
+        /* ----------------------------------------------------------------
+           LINK CARDS
+        ---------------------------------------------------------------- */
+        .link-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.7rem 0.35rem 0.6rem;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            background: rgba(255,255,255,0.025);
+            color: var(--text-dim);
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            text-align: center;
+            touch-action: manipulation;
+            transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .link-card:hover {
+            background: rgba(60, 160, 231, 0.1);
+            border-color: rgba(60, 160, 231, 0.3);
+            color: var(--text);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(60, 160, 231, 0.12);
+        }
+
+        /* Active state for touch feedback */
+        .link-card:active {
+            background: rgba(60, 160, 231, 0.15);
+            border-color: rgba(60, 160, 231, 0.4);
+            color: var(--text);
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+
+        .link-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: 1px solid rgba(60, 160, 231, 0.2);
+            object-fit: cover;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .link-card:hover img {
+            border-color: var(--accent);
+            box-shadow: 0 0 14px rgba(60, 160, 231, 0.3);
+        }
+
+        .link-card span {
+            display: block;
+            width: 100%;
+            max-width: 90px;
+            line-height: 1.25;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+        }
+
+        /* ================================================================
+           RESPONSIVE — TABLET  (600px – 799px)
+        ================================================================ */
+        @media (max-width: 799px) {
+            .nav-desktop   { display: none; }
+            .nav-mobile-header { display: flex; }
+            .nav-mobile-panel  { display: block; }
+
+            /* hero: compact, centered */
+            .hero {
+                padding: 1.6rem 1.25rem 0.8rem;
+                gap: 1.25rem;
+            }
+
+            .hero-logo { width: 68px; height: 68px; }
+
+            .hero-text h1   { font-size: 1.9rem; }
+            .hero-text .subtitle { font-size: 0.7rem; }
+
+            .content-wrapper { padding: 0 1rem 3rem; }
+
+            /* search: keep in one row but tighter */
+            .search-bar {
+                padding: 0.75rem 1rem;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 799px) and (min-width: 600px) {
+            /* tablet portrait — 4 columns */
+            .link-row { grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+            .link-card img { width: 56px; height: 56px; }
+            .link-card { font-size: 0.72rem; }
+        }
+
+        /* ================================================================
+           RESPONSIVE — PHONE  (< 600px)
+        ================================================================ */
+        @media (max-width: 599px) {
+
+            .hero {
+                padding: 1.2rem 1rem 0.75rem;
+                gap: 1rem;
+            }
+
+            .hero-logo { width: 54px; height: 54px; }
+
+            .hero-text {
+                padding-left: 1rem;
+                border-left-width: 2px;
+            }
+
+            .hero-text h1 { font-size: 1.5rem; }
+
+            .hero-text .subtitle {
+                font-size: 0.65rem;
+                letter-spacing: 0.14em;
+            }
+
+            .content-wrapper { padding: 0 0.75rem 2.5rem; }
+
+            /* search: stack form + quick icons */
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.6rem;
+                padding: 0.75rem;
+            }
+
+            .search-bar form {
+                width: 100%;
+            }
+
+            .search-bar input[type="submit"] {
+                padding: 0.6rem 0.9rem;
+            }
+
+            .quick-icons {
+                justify-content: flex-start;
+            }
+
+            /* portal: 3 columns on narrow phones, 4 on wider */
+            .link-row { grid-template-columns: repeat(4, 1fr); gap: 0.45rem; }
+            .link-card { padding: 0.6rem 0.25rem 0.5rem; font-size: 0.7rem; }
+            .link-card img { width: 52px; height: 52px; border-radius: 8px; }
+
+            .portal-panel { padding: 0.75rem 0.6rem 0.4rem; border-radius: 12px; }
+        }
+
+        @media (max-width: 420px) {
+            /* very small phones — drop to 3 columns */
+            .link-row { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+            .link-card img { width: 54px; height: 54px; }
+            .link-card { font-size: 0.7rem; gap: 0.4rem; padding: 0.65rem 0.3rem 0.5rem; }
+
+            .hero-text h1 { font-size: 1.3rem; }
+        }
+
+        /* ================================================================
+           RESPONSIVE — TABLET LANDSCAPE / SMALL DESKTOP  (800px – 1099px)
+        ================================================================ */
+        @media (min-width: 800px) and (max-width: 1099px) {
+            .hero { padding: 2rem 1.5rem 1rem; }
+            .content-wrapper { padding: 0 1.5rem 3rem; }
+            .link-row { gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================
+         NAVIGATION
+    ================================================================ -->
+    <div class="nav-wrapper">
+
+        <!-- DESKTOP nav (hidden < 800px) -->
+        <div class="nav-desktop">
+            <nav role="navigation" class="primary-navigation" aria-label="Main navigation">
+                <ul>
+                    <li>
+                        <a href="#">Home ▾</a>
+                        <ul class="dropdown">
+                            <li><a href="http://www.Antonizick.com/">Antonizick.com</a></li>
+                            <li><a href="https://cp.server284.com/login.php">Site Admin</a></li>
+                            <li><a href="https://domains.google.com/registrar/">Domains</a></li>
+                            <li><a href="http://webmail.server284.com/index.php?domain=antonizick.com&">Antonizick Email</a></li>
+                            <li><a href="https://gmail.google.com/">Gmail</a></li>
+                            <li><a href="http://www.youtube.com/user/antonizick/">Antonizick Tube</a></li>
+                            <li><a href="https://onedrive.live.com/">OneDrive</a></li>
+                            <li><a href="https://drive.google.com/drive/my-drive">Google Drive</a></li>
+                            <li><a href="http://webmail.west.cox.net/">Cox Email</a></li>
+                            <li><a href="https://886318047280.signin.aws.amazon.com/console">AWS</a></li>
+                            <li><a href="https://monitoring.solaredge.com/solaredge-web/p/site/1234522/#/dashboard">Solar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Reading / Learning ▾</a>
+                        <ul class="dropdown">
+                            <li><a href="http://www.grc.com/securitynow.htm">Security Now GRC</a></li>
+                            <li><a href="http://twit.tv/sn">Security Now TWIT</a></li>
+                            <li><a href="https://read.amazon.com/">Kindle eReader</a></li>
+                            <li><a href="https://explore.skillbuilder.aws/learn">AWS SkillBuilder</a></li>
+                            <li><a href="https://nebula.app/legaleagle">Nebula</a></li>
+                            <li><a href="https://curiositystream.com/">Curiosity Stream</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="http://dynamicdrive.com">Programming ▾</a>
+                        <ul class="dropdown">
+                            <li><a href="http://dynamicdrive.com">Dynamic Drive</a></li>
+                            <li><a href="https://asciiflow.com/#/">ASCII Flow</a></li>
+                            <li><a href="https://app.diagrams.net/">Draw.IO</a></li>
+                            <li><a href="https://randomtextgenerator.com/">Random Text Generator</a></li>
+                            <li><a href="https://freetts.com/">Text to Speech</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="https://nxtm.antonizick.com/ptask.php">Nx Projects ▾</a>
+                        <ul class="dropdown">
+                            <li><a href="https://nxtm.antonizick.com/ptask.php">Nx Task Manager</a></li>
+                            <li><a href="http://nantonizick.com:8080/">Nx VidProj</a></li>
+                            <li><a href="http://nantonizick.com:9000/">Nx Citadel</a></li>
+                            <li><a href="#">-----------------</a></li>
+                            <li><a href="https://www.antonizick.com/Nx.VidProc/index.txt">Nx VidProj Install</a></li>
+                            <li><a href="https://www.antonizick.com/nxcitadel/instructions.txt">Nx Citadel Install</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="http://www.majorgeeks.com/">Shopping ▾</a>
+                        <ul class="dropdown">
+                            <li><a href="http://www.majorgeeks.com/">Major Geeks</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- MOBILE nav header (hidden ≥ 800px) -->
+        <div class="nav-mobile-header" aria-hidden="false">
+            <a class="nav-mobile-brand" href="#">
+                <img src="https://www.antonizick.com/cyphertek/img/cir.j.png" alt="Logo">
+                <span>NAntonizick.com</span>
+            </a>
+            <button class="hamburger"
+                    id="hamburger-btn"
+                    aria-controls="mobile-menu"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+
+        <!-- MOBILE menu panel -->
+        <div class="nav-mobile-panel" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+
+            <!-- Home -->
+            <div class="mnav-section">
+                <button class="mnav-section-btn"
+                        aria-expanded="false"
+                        aria-controls="mnav-home">
+                    Home
+                    <span class="mnav-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="mnav-links" id="mnav-home">
+                    <a href="http://www.Antonizick.com/">Antonizick.com</a>
+                    <a href="https://cp.server284.com/login.php">Site Admin</a>
+                    <a href="https://domains.google.com/registrar/">Domains</a>
+                    <a href="http://webmail.server284.com/index.php?domain=antonizick.com&">Antonizick Email</a>
+                    <a href="https://gmail.google.com/">Gmail</a>
+                    <a href="http://www.youtube.com/user/antonizick/">Antonizick Tube</a>
+                    <a href="https://onedrive.live.com/">OneDrive</a>
+                    <a href="https://drive.google.com/drive/my-drive">Google Drive</a>
+                    <a href="http://webmail.west.cox.net/">Cox Email</a>
+                    <a href="https://886318047280.signin.aws.amazon.com/console">AWS</a>
+                    <a href="https://monitoring.solaredge.com/solaredge-web/p/site/1234522/#/dashboard">Solar</a>
+                </div>
+            </div>
+
+            <!-- Reading / Learning -->
+            <div class="mnav-section">
+                <button class="mnav-section-btn"
+                        aria-expanded="false"
+                        aria-controls="mnav-reading">
+                    Reading / Learning
+                    <span class="mnav-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="mnav-links" id="mnav-reading">
+                    <a href="http://www.grc.com/securitynow.htm">Security Now GRC</a>
+                    <a href="http://twit.tv/sn">Security Now TWIT</a>
+                    <a href="https://read.amazon.com/">Kindle eReader</a>
+                    <a href="https://explore.skillbuilder.aws/learn">AWS SkillBuilder</a>
+                    <a href="https://nebula.app/legaleagle">Nebula</a>
+                    <a href="https://curiositystream.com/">Curiosity Stream</a>
+                </div>
+            </div>
+
+            <!-- Programming -->
+            <div class="mnav-section">
+                <button class="mnav-section-btn"
+                        aria-expanded="false"
+                        aria-controls="mnav-prog">
+                    Programming
+                    <span class="mnav-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="mnav-links" id="mnav-prog">
+                    <a href="http://dynamicdrive.com">Dynamic Drive</a>
+                    <a href="https://asciiflow.com/#/">ASCII Flow</a>
+                    <a href="https://app.diagrams.net/">Draw.IO</a>
+                    <a href="https://randomtextgenerator.com/">Random Text Generator</a>
+                    <a href="https://freetts.com/">Text to Speech</a>
+                </div>
+            </div>
+
+            <!-- Nx Projects -->
+            <div class="mnav-section">
+                <button class="mnav-section-btn"
+                        aria-expanded="false"
+                        aria-controls="mnav-nx">
+                    Nx Projects
+                    <span class="mnav-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="mnav-links" id="mnav-nx">
+                    <a href="https://nxtm.antonizick.com/ptask.php">Nx Task Manager</a>
+                    <a href="http://nantonizick.com:8080/">Nx VidProj</a>
+                    <a href="http://nantonizick.com:9000/">Nx Citadel</a>
+                    <a href="#">-----------------</a>
+                    <a href="https://www.antonizick.com/Nx.VidProc/index.txt">Nx VidProj Install</a>
+                    <a href="https://www.antonizick.com/nxcitadel/instructions.txt">Nx Citadel Install</a>
+                </div>
+            </div>
+
+            <!-- Shopping -->
+            <div class="mnav-section">
+                <button class="mnav-section-btn"
+                        aria-expanded="false"
+                        aria-controls="mnav-shop">
+                    Shopping
+                    <span class="mnav-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="mnav-links" id="mnav-shop">
+                    <a href="http://www.majorgeeks.com/">Major Geeks</a>
+                </div>
+            </div>
+
+        </div><!-- /nav-mobile-panel -->
+    </div><!-- /nav-wrapper -->
+
+    <!-- ================================================================
+         HERO  (hidden on mobile — logo shown in mobile nav bar instead)
+    ================================================================ -->
+    <header class="hero">
+        <img class="hero-logo"
+             src="https://www.antonizick.com/cyphertek/img/cir.j.png"
+             alt="NAntonizick Logo">
+        <div class="hero-text">
+            <h1>NAntonizick.com</h1>
+            <p class="subtitle">Personal Portal &mdash; Cyphertek</p>
+        </div>
+    </header>
+
+    <!-- ================================================================
+         MAIN CONTENT
+    ================================================================ -->
+    <main class="content-wrapper">
+
+        <!-- Search bar -->
+        <div class="search-bar">
+            <form action="https://search.brave.com/search" role="search">
+                <a href="https://search.brave.com" aria-label="Brave Search">
+                    <img class="brave-logo"
+                         src="https://www.antonizick.com/cyphertek/img/brave.logo.png"
+                         alt="Brave">
+                </a>
+                <input type="search" name="q"
+                       placeholder="Search Bravely&hellip;"
+                       aria-label="Search query">
+                <input type="submit" value="Search">
+            </form>
+            <div class="quick-icons">
+                <a href="https://members.easynews.com/global5/search.html?fly=2"
+                   aria-label="EasyNews Search">
+                    <img src="https://www.antonizick.com/cyphertek/i/homeicon.jpg" alt="EasyNews">
+                </a>
+                <a href="https://members.easynews.com/zipmanager.html"
+                   aria-label="Zip Manager">
+                    <img src="https://www.antonizick.com/cyphertek/i/zip.jpg" alt="Zip Manager">
+                </a>
+            </div>
+        </div>
+
+        <!-- Portal Grid -->
+        <div class="portal-panel">
+
+            <!-- Row 1 -->
+            <div class="link-row">
+                <a class="link-card" href="https://www.youtube.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.youtube.jpg" alt="">
+                    <span>YouTube</span>
+                </a>
+                <a class="link-card" href="https://news.google.com/?hl=en-US&gl=US&ceid=US:en">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.gnews.jpg" alt="">
+                    <span>GNews</span>
+                </a>
+                <a class="link-card" href="http://www.hulu.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.hulu.jpg" alt="">
+                    <span>Hulu</span>
+                </a>
+                <a class="link-card" href="http://www.netflix.com/Login">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.net.jpg" alt="">
+                    <span>Netflix</span>
+                </a>
+                <a class="link-card" href="https://play.hbomax.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.hbo.jpg" alt="">
+                    <span>HBO NOW</span>
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Row 2 -->
+            <div class="link-row">
+                <a class="link-card" href="https://www.amazon.com/Amazon-Video/b/?ie=UTF8&node=2858778011&ref_=nav_cs_prime_video">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.azpv.jpg" alt="">
+                    <span>Amazon Prime</span>
+                </a>
+                <a class="link-card" href="https://www.disneyplus.com/home">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.disney.jpg" alt="">
+                    <span>Disney+</span>
+                </a>
+                <a class="link-card" href="http://www.amazon.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.amazon.jpg" alt="">
+                    <span>Amazon</span>
+                </a>
+                <a class="link-card" href="https://app.plex.tv/desktop/#!/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.plex.jpg" alt="">
+                    <span>Plex</span>
+                </a>
+                <a class="link-card" href="https://www.twitch.tv/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.twitch.jpg" alt="">
+                    <span>Twitch</span>
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Row 3 -->
+            <div class="link-row">
+                <a class="link-card" href="https://identity.doordash.com/auth?client_id=1666519390426295040&intl=en-US&layout=consumer_web&prompt=none&redirect_uri=https%3A%2F%2Fwww.doordash.com%2Fpost-login%2F&response_type=code&scope=%2A&state=%2Fhome%2Fen-US%7C%7C0b2e06cd-e26e-4a46-91bc-cb7e7fd91e0f">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.dd.jpg" alt="">
+                    <span>DoorDash</span>
+                </a>
+                <a class="link-card" href="https://pizzamydear.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.pizza.jpg" alt="">
+                    <span>Pizza My Dear</span>
+                </a>
+                <a class="link-card" href="https://read.amazon.com/kindle-library">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.kindl.jpg" alt="">
+                    <span>Kindle Reader</span>
+                </a>
+                <a class="link-card" href="http://www.audible.com/sign-in/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.audible.jpg" alt="">
+                    <span>Audible</span>
+                </a>
+                <a class="link-card" href="https://github.com/antonizick/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.git.jpg" alt="">
+                    <span>GitHub</span>
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Row 4 -->
+            <div class="link-row">
+                <a class="link-card" href="http://twit.tv/sn">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.twit.jpg" alt="">
+                    <span>Twit SN</span>
+                </a>
+                <a class="link-card" href="http://www.pandora.com/search/sign-in">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.pandora.jpg" alt="">
+                    <span>Pandora</span>
+                </a>
+                <a class="link-card" href="https://shop.yoyoexpert.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.yye.jpg" alt="">
+                    <span>Yoyo Expert</span>
+                </a>
+                <a class="link-card" href="https://yoyotricks.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.yoyotricks.jpg" alt="">
+                    <span>Yoyo Tricks</span>
+                </a>
+                <a class="link-card" href="https://www.reddit.com/r/Throwers/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.redit.jpg" alt="">
+                    <span>Reddit Throwers</span>
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Row 5 -->
+            <div class="link-row">
+                <a class="link-card" href="https://zillow.okta.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.zil.jpg" alt="">
+                    <span>Zillow Okta</span>
+                </a>
+                <a class="link-card" href="https://itpro.tv/wp-login.php">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.itprotv.jpg" alt="">
+                    <span>ITProTV</span>
+                </a>
+                <a class="link-card" href="http://yoyoexpert.com/forums/index.php">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.yyef.jpg" alt="">
+                    <span>YYE Forum</span>
+                </a>
+                <a class="link-card" href="https://yoyotricks.com/login-level-up/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.yoyotricks.jpg" alt="">
+                    <span>Level Up YYT</span>
+                </a>
+                <a class="link-card" href="http://www.imdb.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.imdb.jpg" alt="">
+                    <span>IMDB</span>
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Row 6 -->
+            <div class="link-row">
+                <a class="link-card" href="https://send.firefox.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.share.jpg" alt="">
+                    <span>Firefox Send</span>
+                </a>
+                <a class="link-card" href="https://antisyphontraining.brightspace.com/d2l/login">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.antisy.jpg" alt="">
+                    <span>AntySiphon Training</span>
+                </a>
+                <a class="link-card" href="https://search.brave.com/search?q=Thesaurus+">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.gthe.jpg" alt="">
+                    <span>G-Thesaurus</span>
+                </a>
+                <a class="link-card" href="https://search.brave.com/search?q=Wiki+Episodes+">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.gwiki.jpg" alt="">
+                    <span>G-Wiki Episodes</span>
+                </a>
+                <a class="link-card" href="https://search.brave.com/search?q=Definition+">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.gdef.jpg" alt="">
+                    <span>G-Definition</span>
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Row 7 -->
+            <div class="link-row">
+                <a class="link-card" href="https://www.grc.com/passwords.htm">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.grc.jpg" alt="">
+                    <span>GRC Passwords</span>
+                </a>
+                <a class="link-card" href="https://hakin9.org/my-products/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.hak.jpg" alt="">
+                    <span>hakin9</span>
+                </a>
+                <a class="link-card" href="http://www.speedtest.net/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.speed.jpg" alt="">
+                    <span>Speed Test</span>
+                </a>
+                <a class="link-card" href="https://www.youtube.com/user/antonizick/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.ntube.jpg" alt="">
+                    <span>Antonizick YT</span>
+                </a>
+                <a class="link-card" href="http://www.ipinfo.io">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.quest.jpg" alt="">
+                    <span>What's My IP</span>
+                </a>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Row 8 -->
+            <div class="link-row">
+                <a class="link-card" href="http://spiritofterrabithia.deviantart.com/gallery/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.eart.jpg" alt="">
+                    <span>SpiritOfTerrabithia</span>
+                </a>
+                <a class="link-card" href="https://www.youtube.com/user/minecraftvidsNV/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.jtube.jpg" alt="">
+                    <span>Joshua YouTube</span>
+                </a>
+                <a class="link-card" href="https://drive.google.com/drive/my-drive">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.gdrive.jpg" alt="">
+                    <span>Google Drive</span>
+                </a>
+                <a class="link-card" href="https://onedrive.live.com/">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.odrive.jpg" alt="">
+                    <span>OneDrive</span>
+                </a>
+                <a class="link-card" href="https://www.fandango.com/classic-cinemas-woodstock-xq-aafsi/theater-page?format=all">
+                    <img src="https://www.antonizick.com/cyphertek/i/mobile.movie.jpg" alt="">
+                    <span>Movie Tickets</span>
+                </a>
+            </div>
+
+        </div><!-- /portal-panel -->
+    </main>
+
+    <!-- ================================================================
+         MOBILE NAV JAVASCRIPT
+    ================================================================ -->
+    <script>
+        (function () {
+            var hamburger  = document.getElementById('hamburger-btn');
+            var mobileMenu = document.getElementById('mobile-menu');
+            var sectionBtns = document.querySelectorAll('.mnav-section-btn');
+
+            /* --- Hamburger toggle --- */
+            hamburger.addEventListener('click', function () {
+                var isOpen = mobileMenu.classList.toggle('is-open');
+                hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+
+            /* Close menu when a link inside it is tapped */
+            mobileMenu.addEventListener('click', function (e) {
+                if (e.target.tagName === 'A') {
+                    mobileMenu.classList.remove('is-open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            /* Close menu on outside tap */
+            document.addEventListener('click', function (e) {
+                if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    mobileMenu.classList.remove('is-open');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            /* --- Section accordion --- */
+            sectionBtns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var targetId  = btn.getAttribute('aria-controls');
+                    var links     = document.getElementById(targetId);
+                    var isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+                    /* Collapse all others */
+                    sectionBtns.forEach(function (other) {
+                        if (other !== btn) {
+                            other.setAttribute('aria-expanded', 'false');
+                            var otherId = other.getAttribute('aria-controls');
+                            document.getElementById(otherId).classList.remove('is-open');
+                        }
+                    });
+
+                    /* Toggle this one */
+                    var next = !isExpanded;
+                    btn.setAttribute('aria-expanded', next ? 'true' : 'false');
+                    links.classList.toggle('is-open', next);
+                });
+            });
+        })();
+    </script>
+
+</body>
+</html>
