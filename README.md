@@ -36,4 +36,4 @@ All modern browsers with support for CSS backdrop-filter and CSS Grid.
 
 ## Screenshots
 
-![Portal Page Screenshot](screenshots/CTPortal 2026-05-03 15_30_39-Settings.png)
+<img src="screenshots/CTPortal%202026-05-03%2015_30_39-Settings.png" width="800">
